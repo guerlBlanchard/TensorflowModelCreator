@@ -1,7 +1,6 @@
 import os
 
 import tensorflow as tf
-from tensorflow import keras
 
 import numpy as np
 
@@ -11,7 +10,12 @@ class algorithm:
         if (os.path.exists(self.model_path)):
             self.model = tf.keras.models.load_model(self.model_path)
         else:
-            self.model = tf.keras.Sequential()
+            self.model = tf.keras.Sequential([
+                tf.keras.layers.Dense()
+            ])
     
     def __del__(self):
         self.model.save(self.model_path)
+    
+    def __str__(self):
+        return(self.model.predict())
