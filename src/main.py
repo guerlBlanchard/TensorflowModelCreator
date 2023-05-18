@@ -7,16 +7,29 @@ import pandas as pd
 
 class algorithm:
     def __init__(self, model):
-        self.model_path = '../saved_model' + model
+        self.model_path = '../saved_model/' + model
         if (os.path.exists(self.model_path)):
             self.model = tf.keras.models.load_model(self.model_path)
+        else:
+            print("The given path does not exit, would you like to create a new model? (y/n)")
+            if (input(">> ") == 'y'):
+                self.setModel()
+            else:
+                exit
     
     def __del__(self):
-        self.model.save(self.model_path)
+        if (self.model != None):
+            self.model.save(self.model_path)
     
     def __str__(self, predictSet):
         return(self.model.predict(predictSet))
     
+    def setModel(self):
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.Dense()
+        ])
+        self.model.compile(loss='', optimizer='', metrics=[])
+
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         if (dataSet.isnull().sum() == 0):
             return (dataSet)
@@ -36,12 +49,6 @@ class algorithm:
         else:
             print('\033[93m' + "Incorect value, please enter a correct value or type EXIT to stop" + '\033[0m')
             return(self.handleMissing(dataSet))
-        
-    def setModel(self):
-        self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense()
-        ])
-        self.model.compile(loss='', optimizer='', metrics=[])
 
     def train(self, trainingSet):
         trainingData = self.handleMissing(pd.read_csv(trainingSet))
