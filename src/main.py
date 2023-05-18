@@ -26,7 +26,11 @@ class algorithm:
     
     def setModel(self):
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense()
+            tf.keras.layers.InputLayer(input_shape=7),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dense(16, activation='relu'),
+            tf.keras.layers.Dense(4, activation='relu'),
+            tf.keras.layers.Dense(1, activation='sigmoid')
         ])
         self.model.compile(loss='', optimizer='', metrics=[])
 
