@@ -32,7 +32,7 @@ class algorithm:
             tf.keras.layers.Dense(4, activation='relu'),
             tf.keras.layers.Dense(1, activation='sigmoid')
         ])
-        self.model.compile(loss='', optimizer='', metrics=[])
+        self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         if (dataSet.isnull().sum() == 0):
