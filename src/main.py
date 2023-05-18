@@ -3,6 +3,7 @@ import os
 import tensorflow as tf
 
 import numpy as np
+import pandas as pd
 
 class algorithm:
     def __init__(self, model):
@@ -17,5 +18,8 @@ class algorithm:
     def __del__(self):
         self.model.save(self.model_path)
     
-    def __str__(self):
-        return(self.model.predict())
+    def __str__(self, predictSet):
+        return(self.model.predict(predictSet))
+    
+    def train(self, trainingSet):
+        trainingData = pd.read_csv(trainingSet)
