@@ -10,10 +10,6 @@ class algorithm:
         self.model_path = '../saved_model' + model
         if (os.path.exists(self.model_path)):
             self.model = tf.keras.models.load_model(self.model_path)
-        else:
-            self.model = tf.keras.Sequential([
-                tf.keras.layers.Dense()
-            ])
     
     def __del__(self):
         self.model.save(self.model_path)
@@ -40,6 +36,14 @@ class algorithm:
         else:
             print('\033[93m' + "Incorect value, please enter a correct value or type EXIT to stop" + '\033[0m')
             return(self.handleMissing(dataSet))
+        
+    def setModel(self):
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.Dense()
+        ])
+        self.model.compile(loss='', optimizer='', metrics=[])
 
     def train(self, trainingSet):
-        trainingData = pd.read_csv(trainingSet)
+        trainingData = self.handleMissing(pd.read_csv(trainingSet))
+
+            
