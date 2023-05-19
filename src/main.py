@@ -8,8 +8,10 @@ import numpy as np
 import pandas as pd
 
 class algorithm:
+    model: tf.keras.Model
     def __init__(self, model):
         self.model_path = '../saved_model/' + model
+        print(self.model_path)
         if (os.path.exists(self.model_path)):
             self.model = tf.keras.models.load_model(self.model_path)
         else:
@@ -18,15 +20,10 @@ class algorithm:
                 self.setModel()
             else:
                 exit
-    
-    def __del__(self):
-        try:
-            self.model.save(self.model_path)
-        except:
-            print("no model was defined")
-    
-    def __str__(self, predictSet):
-        return(self.model.predict(predictSet))
+
+    def saveModel(self):
+        self.model.save(self.model_path)
+
     
     def setModel(self):
         self.model = tf.keras.Sequential([
@@ -72,10 +69,11 @@ class algorithm:
         trainingData = self.encode(trainingData)
         print(trainingData)
         inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
-        self.model.fit(inputData, trainingData['Survived'], epochs=10, batch_size=32)
+        self.model.fit(inputData, trainingData['Survived'], epochs=100, batch_size=32)
 
 
 
 if __name__ == "__main__":
-    titanic = algorithm('model1')
+    titanic = algorithm('model1.h5')
     titanic.train('../Datasets/train.csv')
+    titanic.saveModel()
