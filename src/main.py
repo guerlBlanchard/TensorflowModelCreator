@@ -74,9 +74,16 @@ class algorithm:
         inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
         self.model.fit(inputData, trainingData["Survived"], epochs=1000, batch_size=32)
 
+    def predict(self, testingSet):
+        testingData = self.handleMissing(pd.read_csv(testingSet))
+        testingData = self.encode(testingData)
+        inputData = testingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
+        predictions = self.model.predict(inputData)
+        print("Estimated test probability: {.4f}".format(np.sum(predictions) / len(predictions)))
 
 
 if __name__ == "__main__":
     titanic = algorithm()
     titanic.train("../Datasets/train.csv")
+    titanic.predict("../Datasets/test.csv")
     titanic.saveModel()
