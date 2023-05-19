@@ -1,7 +1,24 @@
-# Titanic - Machine Learning from Disaster
 
-This project will follow the goal of the Kaggle getting started competition.
+# Tensorflow Model Creator
 
-## Competition link
+This project will take the form of a python class that will generate, compile, train and evaluate a tensorflow model.
 
-https://www.kaggle.com/competitions/titanic/data?select=train.csv
+
+## Roadmap
+
+- Tensorflow step up using public datasets
+
+- Project model save and load
+
+- Dynamic model creation using user's input
+
+- Dynamic dataset preprocessing
+
+- Dynamic model training and evaluation
+
+
+If my understanding of ML is deep enough after these steps, the following will be added:
+
+- Model layering recommendation usin ML
+
+- Automatic dataset preprocessing
