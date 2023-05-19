@@ -65,12 +65,14 @@ class algorithm:
         #     if dataSet[column].dtype != 'int64' and dataSet[column].dtype != 'float64':
         dataSet['Sex'] = dataSet['Sex'].replace({'male': 0, 'female': 1})
         dataSet['Embarked'] = dataSet['Embarked'].replace({'C': 0, 'Q': 1, 'S': 2})
-
         return dataSet
 
     def train(self, trainingSet):
         trainingData = self.handleMissing(pd.read_csv(trainingSet))
+        trainingData = self.encode(trainingData)
         print(trainingData)
+        inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
+        self.model.fit(inputData, trainingData['Survived'], epochs=10, batch_size=32)
 
 
 
