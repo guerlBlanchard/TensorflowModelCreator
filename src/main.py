@@ -30,7 +30,7 @@ class algorithm:
     def setModel(self):
         print("Creating new model")
         self.model = tf.keras.Sequential([
-            tf.keras.layers.InputLayer(input_shape=6),
+            tf.keras.layers.Dense(64, activation="relu", input_shape=(6,)),
             tf.keras.layers.Dense(64, activation="relu"),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(16, activation="relu"),
@@ -79,7 +79,7 @@ class algorithm:
         testingData = self.encode(testingData)
         inputData = testingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
         predictions = self.model.predict(inputData)
-        print("Estimated test probability: {.4f}".format(np.sum(predictions) / len(predictions)))
+        print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
 
 
 if __name__ == "__main__":
