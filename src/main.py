@@ -1,3 +1,5 @@
+
+
 import os
 
 import tensorflow as tf
@@ -12,21 +14,23 @@ class algorithm:
             self.model = tf.keras.models.load_model(self.model_path)
         else:
             print("The given path does not exit, would you like to create a new model? (y/n)")
-            if (input(">> ") == 'y'):
+            if (input(">> ") == "y"):
                 self.setModel()
             else:
                 exit
     
     def __del__(self):
-        if (self.model != None):
+        try:
             self.model.save(self.model_path)
+        except:
+            print("no model was defined")
     
     def __str__(self, predictSet):
         return(self.model.predict(predictSet))
     
     def setModel(self):
         self.model = tf.keras.Sequential([
-            tf.keras.layers.InputLayer(input_shape=7),
+            tf.keras.layers.InputLayer(input_shape=6),
             tf.keras.layers.Dense(64, activation='relu'),
             tf.keras.layers.Dense(16, activation='relu'),
             tf.keras.layers.Dense(4, activation='relu'),
@@ -35,12 +39,11 @@ class algorithm:
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        if (dataSet.isnull().sum() == 0):
-            return (dataSet)
         print("The given file has missing values, please enter ow you wish to handle them:")
         print("\t1 - Drop the values")
         print("\t2 - Replace with the most frequent values")
         print("\t3 - Replace with the most average values")
+        print("\t4 - Show missing values amount")
         option = input(">> ")
         if option == '1':
             return (dataSet.dropna())
@@ -48,6 +51,9 @@ class algorithm:
             return (dataSet.fillna(dataSet.mode().iloc[0]))
         elif option == '3':
             return (dataSet.fillna(dataSet.mean()))
+        elif option == '4':
+            print(dataSet.isna().sum())
+            return(self.handleMissing(dataSet))
         elif option == 'EXIT':
             exit()
         else:
@@ -56,5 +62,10 @@ class algorithm:
 
     def train(self, trainingSet):
         trainingData = self.handleMissing(pd.read_csv(trainingSet))
+        print(trainingData)
 
-            
+
+
+if __name__ == "__main__":
+    titanic = algorithm('model1')
+    titanic.train('../Datasets/train.csv')
