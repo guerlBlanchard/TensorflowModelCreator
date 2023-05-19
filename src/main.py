@@ -59,6 +59,14 @@ class algorithm:
         else:
             print('\033[93m' + "Incorect value, please enter a correct value or type EXIT to stop" + '\033[0m')
             return(self.handleMissing(dataSet))
+        
+    def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        # for column in dataSet.columns:
+        #     if dataSet[column].dtype != 'int64' and dataSet[column].dtype != 'float64':
+        dataSet['Sex'] = dataSet['Sex'].replace({'male': 0, 'female': 1})
+        dataSet['Embarked'] = dataSet['Embarked'].replace({'C': 0, 'Q': 1, 'S': 2})
+
+        return dataSet
 
     def train(self, trainingSet):
         trainingData = self.handleMissing(pd.read_csv(trainingSet))
