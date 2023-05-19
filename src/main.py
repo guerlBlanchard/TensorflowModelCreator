@@ -1,5 +1,3 @@
-
-
 import os
 
 import tensorflow as tf
@@ -34,8 +32,8 @@ class algorithm:
         self.model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(input_shape=6),
             tf.keras.layers.Dense(64, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(16, activation="relu"),
-            tf.keras.layers.Dense(4, activation="relu"),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -74,7 +72,7 @@ class algorithm:
         trainingData = self.encode(trainingData)
         print(trainingData)
         inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
-        self.model.fit(inputData, trainingData["Survived"], epochs=100, batch_size=32)
+        self.model.fit(inputData, trainingData["Survived"], epochs=1000, batch_size=32)
 
 
 
