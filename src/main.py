@@ -40,8 +40,10 @@ class algorithm:
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         inputSet: pd.DataFrame
-
+        print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
+        columns = input(">> ")
         
+
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("The given file has missing values, please enter ow you wish to handle them:")
