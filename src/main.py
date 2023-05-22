@@ -38,6 +38,11 @@ class algorithm:
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
+    def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        inputSet: pd.DataFrame
+
+        
+
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("The given file has missing values, please enter ow you wish to handle them:")
         print("\t1 - Drop the values")
