@@ -1,4 +1,5 @@
 import os
+import readline
 
 import tensorflow as tf
 
@@ -43,20 +44,23 @@ class algorithm:
         print(dataSet.columns.values.tolist())
         columns = input(">> ")
         return (dataSet[columns.split(';')])
-
+    
+    def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        print("Please input the names of the column you wish to use as a Target value")
+        print(dataSet.columns.values.tolist())
+        column = input(">> ")
+        return(dataSet[column])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        
-
         for column in dataSet.columns:
-            if dataSet[column].hasnans():
+            if dataSet[column].isna().sum() != 0:
                 print("The column named {} has missing {} values, please enter ow you wish to handle them:".format(column, dataSet[column].isna().sum()))
                 print("\t1 - Drop the values")
                 print("\t2 - Replace with the most frequent values")
                 print("\t3 - Replace with the most average values")
                 option = input(">> ")
                 if option == "1":
-                    dataSet.dropna(subset=['Age'], inplace=True)
+                    dataSet.dropna(subset=[column], inplace=True)
                 elif option == "2":
                     dataSet[column].fillna(dataSet[column].mean(), inplace=True)
                 elif option == "3":
@@ -84,18 +88,21 @@ class algorithm:
         inputData = self.handleMissing(inputData)
         inputData = self.encode(inputData)
         print(inputData)
-        self.model.fit(inputData, dataSet["Survived"], epochs=1000, batch_size=32)
+        print(dataSet)
+        dataSet.drop(inputData.columns, axis=1)
+        targetData = self.selectTarget(dataSet)
+        self.model.fit(inputData, targetData, epochs=1000, batch_size=32)
 
-    def predict(self, testingSet):
-        testingData = self.handleMissing(pd.read_csv(testingSet))
-        testingData = self.encode(testingData)
-        inputData = testingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
-        predictions = self.model.predict(inputData)
-        print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
+    # def predict(self, testingSet):
+    #     testingData = self.handleMissing(pd.read_csv(testingSet))
+    #     testingData = self.encode(testingData)
+    #     inputData = testingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
+    #     predictions = self.model.predict(inputData)
+    #     print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
 
 
 if __name__ == "__main__":
     titanic = algorithm()
     titanic.train("../Datasets/train.csv")
-    titanic.predict("../Datasets/test.csv")
+    # titanic.predict("../Datasets/test.csv")
     titanic.saveModel()
