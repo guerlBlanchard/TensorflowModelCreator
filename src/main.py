@@ -39,10 +39,9 @@ class algorithm:
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        inputSet: pd.DataFrame
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
         columns = input(">> ")
-        
+        return (dataSet[columns.split(';')])
 
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -75,7 +74,8 @@ class algorithm:
         return dataSet
 
     def train(self, trainingSet):
-        trainingData = self.handleMissing(pd.read_csv(trainingSet))
+        trainingData = self.selectInput(pd.read_csv(trainingSet))
+        trainingData = self.handleMissing(trainingData)
         trainingData = self.encode(trainingData)
         print(trainingData)
         inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
