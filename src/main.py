@@ -46,26 +46,25 @@ class algorithm:
 
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        print("The given file has missing values, please enter ow you wish to handle them:")
-        print("\t1 - Drop the values")
-        print("\t2 - Replace with the most frequent values")
-        print("\t3 - Replace with the most average values")
-        print("\t4 - Show missing values amount")
-        option = input(">> ")
-        if option == "1":
-            return (dataSet.dropna())
-        elif option == "2":
-            return (dataSet.fillna(dataSet.mode().iloc[0]))
-        elif option == "3":
-            return (dataSet.fillna(dataSet.mean()))
-        elif option == "4":
-            print(dataSet.isna().sum())
-            return(self.handleMissing(dataSet))
-        elif option == "EXIT":
-            exit()
-        else:
-            print("\033[93m" + "Incorect value, please enter a correct value or type EXIT to stop" + "\033[0m")
-            return(self.handleMissing(dataSet))
+        
+
+        for column in dataSet.columns:
+            if dataSet[column].hasnans():
+                print("The column named {} has missing {} values, please enter ow you wish to handle them:".format(column, dataSet[column].isna().sum()))
+                print("\t1 - Drop the values")
+                print("\t2 - Replace with the most frequent values")
+                print("\t3 - Replace with the most average values")
+                option = input(">> ")
+                if option == "1":
+                    return (dataSet.dropna())
+                elif option == "2":
+                    return (dataSet.fillna(dataSet.mode().iloc[0]))
+                elif option == "3":
+                    return (dataSet.fillna(dataSet.mean()))
+                elif option == "EXIT":
+                    exit()
+                else:
+                    print("\033[93m" + "Incorect value, please enter a correct value or type EXIT to stop" + "\033[0m")
         
     def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
