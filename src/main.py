@@ -76,8 +76,6 @@ class algorithm:
                     exit
                 encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
                 dataSet[column] = dataSet[column].map(encoding_dict)
-        # dataSet["Sex"] = dataSet["Sex"].replace({"male": 0, "female": 1})
-        # dataSet["Embarked"] = dataSet["Embarked"].replace({"C": 0, "Q": 1, "S": 2})
         return dataSet
 
     def train(self, trainingSet):
