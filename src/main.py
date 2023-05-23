@@ -70,10 +70,12 @@ class algorithm:
     def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
             if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
-                if (sum(dataSet[column].unique()) / sum(dataSet[column]) >= 50):
+                print("Encoding the {} column".format(column))
+                if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 50):
                     print("The column {} has too many varying values, please encode them manualy or augment the training data".format(column))
                     exit
-                
+                encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
+                dataSet[column] = dataSet[column].map(encoding_dict)
         # dataSet["Sex"] = dataSet["Sex"].replace({"male": 0, "female": 1})
         # dataSet["Embarked"] = dataSet["Embarked"].replace({"C": 0, "Q": 1, "S": 2})
         return dataSet
