@@ -56,15 +56,16 @@ class algorithm:
                 print("\t3 - Replace with the most average values")
                 option = input(">> ")
                 if option == "1":
-                    return (dataSet.dropna(subset=['Age'], inplace=True))
+                    dataSet.dropna(subset=['Age'], inplace=True)
                 elif option == "2":
-                    return (dataSet[column].fillna(dataSet[column].mean(), inplace=True))
+                    dataSet[column].fillna(dataSet[column].mean(), inplace=True)
                 elif option == "3":
-                    return (dataSet[column].fillna(dataSet[column].mode()[0], inplace=True))
+                    dataSet[column].fillna(dataSet[column].mode()[0], inplace=True)
                 elif option == "EXIT":
                     exit()
                 else:
                     print("\033[93m" + "Incorect value, please enter a correct value or type EXIT to stop" + "\033[0m")
+            return (dataSet)
         
     def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
