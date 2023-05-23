@@ -56,11 +56,11 @@ class algorithm:
                 print("\t3 - Replace with the most average values")
                 option = input(">> ")
                 if option == "1":
-                    return (dataSet.dropna())
+                    return (dataSet.dropna(subset=['Age'], inplace=True))
                 elif option == "2":
-                    return (dataSet.fillna(dataSet.mode().iloc[0]))
+                    return (dataSet[column].fillna(dataSet[column].mean(), inplace=True))
                 elif option == "3":
-                    return (dataSet.fillna(dataSet.mean()))
+                    return (dataSet[column].fillna(dataSet[column].mode()[0], inplace=True))
                 elif option == "EXIT":
                     exit()
                 else:
