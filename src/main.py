@@ -40,6 +40,7 @@ class algorithm:
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
+        print(dataSet.columns.values.tolist())
         columns = input(">> ")
         return (dataSet[columns.split(';')])
 
@@ -74,12 +75,13 @@ class algorithm:
         return dataSet
 
     def train(self, trainingSet):
-        trainingData = self.selectInput(pd.read_csv(trainingSet))
+        dataSet = pd.read_csv(trainingSet)
+        trainingData = self.selectInput(dataSet)
         trainingData = self.handleMissing(trainingData)
         trainingData = self.encode(trainingData)
         print(trainingData)
         inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
-        self.model.fit(inputData, trainingData["Survived"], epochs=1000, batch_size=32)
+        self.model.fit(inputData, dataSet["Survived"], epochs=1000, batch_size=32)
 
     def predict(self, testingSet):
         testingData = self.handleMissing(pd.read_csv(testingSet))
