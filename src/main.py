@@ -49,7 +49,7 @@ class algorithm:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
         column = input(">> ")
-        return(self.encode(self.handleMissing(dataSet[column])))
+        return (dataSet[column])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
@@ -58,6 +58,7 @@ class algorithm:
                 print("\t1 - Drop the values")
                 print("\t2 - Replace with the most frequent values")
                 print("\t3 - Replace with the most average values")
+                print("\t4 - Ignore")
                 option = input(">> ")
                 if option == "1":
                     dataSet.dropna(subset=[column], inplace=True)
@@ -65,11 +66,13 @@ class algorithm:
                     dataSet[column].fillna(dataSet[column].mean(), inplace=True)
                 elif option == "3":
                     dataSet[column].fillna(dataSet[column].mode()[0], inplace=True)
+                elif option == "4":
+                    continue
                 elif option == "EXIT":
                     exit()
                 else:
                     print("\033[93m" + "Incorect value, please enter a correct value or type EXIT to stop" + "\033[0m")
-            return (dataSet)
+        return (dataSet)
         
     def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
@@ -83,13 +86,14 @@ class algorithm:
         return dataSet
 
     def train(self, trainingSet):
-        dataSet = pd.read_csv(trainingSet)
+        dataSet = self.encode(self.handleMissing(pd.read_csv(trainingSet)))
         inputData = self.selectInput(dataSet)
-        print(inputData)
-        print(dataSet)
         dataSet.drop(inputData.columns, axis=1)
         targetData = self.selectTarget(dataSet)
-        self.model.fit(inputData, targetData, epochs=1000, batch_size=32)
+        print(inputData)
+        print(targetData)
+        input("Press ENTER to train your model")
+        self.model.fit(inputData, targetData, epochs=100, batch_size=32)
 
     # def predict(self, testingSet):
     #     testingData = self.handleMissing(pd.read_csv(testingSet))
