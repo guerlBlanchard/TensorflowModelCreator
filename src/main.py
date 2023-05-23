@@ -68,19 +68,22 @@ class algorithm:
             return(self.handleMissing(dataSet))
         
     def encode(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        # for column in dataSet.columns:
-        #     if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
-        dataSet["Sex"] = dataSet["Sex"].replace({"male": 0, "female": 1})
-        dataSet["Embarked"] = dataSet["Embarked"].replace({"C": 0, "Q": 1, "S": 2})
+        for column in dataSet.columns:
+            if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
+                if (sum(dataSet[column].unique()) / sum(dataSet[column]) >= 50):
+                    print("The column {} has too many varying values, please encode them manualy or augment the training data".format(column))
+                    exit
+                
+        # dataSet["Sex"] = dataSet["Sex"].replace({"male": 0, "female": 1})
+        # dataSet["Embarked"] = dataSet["Embarked"].replace({"C": 0, "Q": 1, "S": 2})
         return dataSet
 
     def train(self, trainingSet):
         dataSet = pd.read_csv(trainingSet)
-        trainingData = self.selectInput(dataSet)
-        trainingData = self.handleMissing(trainingData)
-        trainingData = self.encode(trainingData)
-        print(trainingData)
-        inputData = trainingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
+        inputData = self.selectInput(dataSet)
+        inputData = self.handleMissing(inputData)
+        inputData = self.encode(inputData)
+        print(inputData)
         self.model.fit(inputData, dataSet["Survived"], epochs=1000, batch_size=32)
 
     def predict(self, testingSet):
