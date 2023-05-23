@@ -49,7 +49,7 @@ class algorithm:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
         column = input(">> ")
-        return(dataSet[column])
+        return(self.encode(self.handleMissing(dataSet[column])))
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
@@ -85,8 +85,6 @@ class algorithm:
     def train(self, trainingSet):
         dataSet = pd.read_csv(trainingSet)
         inputData = self.selectInput(dataSet)
-        inputData = self.handleMissing(inputData)
-        inputData = self.encode(inputData)
         print(inputData)
         print(dataSet)
         dataSet.drop(inputData.columns, axis=1)
