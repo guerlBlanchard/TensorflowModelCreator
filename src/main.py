@@ -8,7 +8,7 @@ import pandas as pd
 
 class algorithm:
     model: tf.keras.Model
-    columns: type[str]
+    # columns: type[str]
     def __init__(self):
         print("Please input the name of the model you wish to create/load")
         model_name = input(">> ")
@@ -25,6 +25,9 @@ class algorithm:
             self.setModel()
 
 
+    def __str__(self) -> str:
+        return (self.model.summary())
+
     def saveModel(self):
         self.model.save(self.model_path)
 
@@ -34,8 +37,6 @@ class algorithm:
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(64, activation="relu", input_shape=(6,)),
             tf.keras.layers.Dense(64, activation="relu"),
-            tf.keras.layers.Dense(32, activation="relu"),
-            tf.keras.layers.Dense(16, activation="relu"),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -95,7 +96,8 @@ class algorithm:
         print(inputData)
         print(targetData)
         input("Press ENTER to train your model")
-        self.model.fit(inputData, targetData, epochs=1000, batch_size=32)
+        
+        self.model.fit(inputData, targetData, epochs=10, batch_size=32)
 
     def predict(self, testingSet):
         dataSet = pd.read_csv(testingSet)
