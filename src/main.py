@@ -25,11 +25,13 @@ class algorithm:
     #     else:
     #         self.setModel()
 
-    def __init__(self, savedModel: str):
+    def __init__(self, savedModel:str=None):
+        if savedModel is None:
+            return
         self.model_path = "../saved_model/" + savedModel
         if (os.path.exists(self.model_path)):
-                self.model = tf.keras.models.load_model(self.model_path)
-                print("Previous model has been loaded")
+            self.model = tf.keras.models.load_model(self.model_path)
+            print("Previous model has been loaded")
 
     def __str__(self) -> str:
         return (self.model.summary())
