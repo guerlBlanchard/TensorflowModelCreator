@@ -9,22 +9,27 @@ from sklearn.model_selection import train_test_split
 
 class algorithm:
     model: tf.keras.Model
-    # columns: type[str]
-    def __init__(self):
-        print("Please input the name of the model you wish to create/load")
-        model_name = input(">> ")
-        self.model_path = "../saved_model/" + model_name
-        print(self.model_path)
+    # columns: list[str]
+    # def __init__(self):
+    #     print("Please input the name of the model you wish to create/load")
+    #     model_name = input(">> ")
+    #     self.model_path = "../saved_model/" + model_name
+    #     print(self.model_path)
+    #     if (os.path.exists(self.model_path)):
+    #         print("This model already exits, do you wish to overwride it (O) or load it (L)")
+    #         if (input(">> ") == 'L'):
+    #             self.model = tf.keras.models.load_model(self.model_path)
+    #             print("Previous model has been loaded")
+    #         else:
+    #             self.setModel()
+    #     else:
+    #         self.setModel()
+
+    def __init__(self, savedModel: str):
+        self.model_path = "../saved_model/" + savedModel
         if (os.path.exists(self.model_path)):
-            print("This model already exits, do you wish to overwride it (O) or load it (L)")
-            if (input(">> ") == 'L'):
                 self.model = tf.keras.models.load_model(self.model_path)
                 print("Previous model has been loaded")
-            else:
-                self.setModel()
-        else:
-            self.setModel()
-
 
     def __str__(self) -> str:
         return (self.model.summary())
@@ -99,9 +104,11 @@ class algorithm:
         targetData = self.selectTarget(dataSet)
         print(inputData)
         print(targetData)
+        input("Press ENTER to create your model")
+        self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
-        self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
+        self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
         print("Loss: {} || Accuracy: {}".format(loss, acc))
