@@ -5,6 +5,7 @@ import tensorflow as tf
 
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 class algorithm:
     model: tf.keras.Model
@@ -96,8 +97,8 @@ class algorithm:
         print(inputData)
         print(targetData)
         input("Press ENTER to train your model")
-        
-        self.model.fit(inputData, targetData, epochs=10, batch_size=32)
+        trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=2)
+        self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
 
     def predict(self, testingSet):
         dataSet = pd.read_csv(testingSet)
