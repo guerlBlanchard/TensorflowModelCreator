@@ -8,6 +8,7 @@ import pandas as pd
 
 class algorithm:
     model: tf.keras.Model
+    columns: type[str]
     def __init__(self):
         print("Please input the name of the model you wish to create/load")
         model_name = input(">> ")
@@ -43,7 +44,8 @@ class algorithm:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
         print(dataSet.columns.values.tolist())
         columns = input(">> ")
-        return (dataSet[columns.split(';')])
+        self.columns = columns.split(';')
+        return (dataSet[self.columns])
     
     def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the column you wish to use as a Target value")
@@ -86,25 +88,24 @@ class algorithm:
         return dataSet
 
     def train(self, trainingSet):
-        dataSet = self.encode(self.handleMissing(pd.read_csv(trainingSet)))
-        inputData = self.selectInput(dataSet)
+        dataSet = self.handleMissing(pd.read_csv(trainingSet))
+        inputData = self.encode(self.selectInput(dataSet))
         dataSet.drop(inputData.columns, axis=1)
         targetData = self.selectTarget(dataSet)
         print(inputData)
         print(targetData)
         input("Press ENTER to train your model")
-        self.model.fit(inputData, targetData, epochs=100, batch_size=32)
+        self.model.fit(inputData, targetData, epochs=1000, batch_size=32)
 
-    # def predict(self, testingSet):
-    #     testingData = self.handleMissing(pd.read_csv(testingSet))
-    #     testingData = self.encode(testingData)
-    #     inputData = testingData[["Pclass", "Age", "Sex", "SibSp", "Parch", "Embarked"]]
-    #     predictions = self.model.predict(inputData)
-    #     print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
+    def predict(self, testingSet):
+        dataSet = self.handleMissing(pd.read_csv(testingSet))
+        inputData = self.encode(dataSet[self.columns])
+        predictions = self.model.predict(inputData)
+        print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
 
 
 if __name__ == "__main__":
     titanic = algorithm()
-    titanic.train("../Datasets/train.csv")
-    # titanic.predict("../Datasets/test.csv")
+    # titanic.train("../Datasets/train.csv")
+    titanic.predict("../Datasets/test.csv")
     titanic.saveModel()
