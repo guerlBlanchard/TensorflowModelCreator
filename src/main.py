@@ -27,7 +27,13 @@ class algorithm:
         print("Do you wish to save this model? Yes/[Any]")
         if (input(">> ") == 'Yes'):
             print("Enter a savefile name")
-            self.model.save(self.modelPath + input(">> ") + ".h5")
+            savefile = input(">> ")
+            if os.path.exists(self.modelPath + savefile + ".h5"):
+                print("This savefile name is already taken. Do you wish to overide this savefile? Yes/[Any]")
+                if (input(">> ") == 'Yes'):
+                    self.model.save(self.modelPath + savefile + ".h5")
+            else:
+                self.model.save(self.modelPath + savefile + ".h5")
     
     def setModel(self):
         print("Creating new model")
@@ -36,7 +42,7 @@ class algorithm:
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Dense(16, activation="relu"),
-            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dropout(0.1),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
