@@ -37,7 +37,10 @@ class algorithm:
         print("Creating new model")
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(64, activation="relu", input_shape=(6,)),
-            tf.keras.layers.Dense(64, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
+            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dense(16, activation="relu"),
+            tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
