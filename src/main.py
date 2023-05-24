@@ -97,8 +97,11 @@ class algorithm:
         print(inputData)
         print(targetData)
         input("Press ENTER to train your model")
-        trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=2)
+        trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
         self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
+        print("Overall Evaluation:")
+        loss, acc = self.model.evaluate(validX, validY)
+        print("Loss: {} || Accuracy: {}".format(loss, acc))
 
     def predict(self, testingSet):
         dataSet = pd.read_csv(testingSet)
