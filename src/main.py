@@ -98,14 +98,17 @@ class algorithm:
         self.model.fit(inputData, targetData, epochs=1000, batch_size=32)
 
     def predict(self, testingSet):
-        dataSet = self.handleMissing(pd.read_csv(testingSet))
-        inputData = self.encode(dataSet[self.columns])
+        dataSet = pd.read_csv(testingSet)
+        if self.columns:
+            inputData = self.encode(self.handleMissing(dataSet[self.columns]))
+        else:
+            inputData = self.encode(self.handleMissing(self.selectInput(dataSet[self.columns])))
         predictions = self.model.predict(inputData)
         print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
 
 
 if __name__ == "__main__":
     titanic = algorithm()
-    # titanic.train("../Datasets/train.csv")
+    titanic.train("../Datasets/train.csv")
     titanic.predict("../Datasets/test.csv")
     titanic.saveModel()
