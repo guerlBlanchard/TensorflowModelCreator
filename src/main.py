@@ -8,37 +8,26 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 class algorithm:
-    model: tf.keras.Model
+    model: tf.keras.Model 
+    modelPath:str = "../saved_model/"
     # columns: list[str]
-    # def __init__(self):
-    #     print("Please input the name of the model you wish to create/load")
-    #     model_name = input(">> ")
-    #     self.model_path = "../saved_model/" + model_name
-    #     print(self.model_path)
-    #     if (os.path.exists(self.model_path)):
-    #         print("This model already exits, do you wish to overwride it (O) or load it (L)")
-    #         if (input(">> ") == 'L'):
-    #             self.model = tf.keras.models.load_model(self.model_path)
-    #             print("Previous model has been loaded")
-    #         else:
-    #             self.setModel()
-    #     else:
-    #         self.setModel()
 
     def __init__(self, savedModel:str=None):
         if savedModel is None:
             return
-        self.model_path = "../saved_model/" + savedModel
-        if (os.path.exists(self.model_path)):
-            self.model = tf.keras.models.load_model(self.model_path)
+        self.modelPath += savedModel
+        if (os.path.exists(self.modelPath)):
+            self.model = tf.keras.models.load_model(self.modelPath)
             print("Previous model has been loaded")
 
     def __str__(self) -> str:
         return (self.model.summary())
 
     def saveModel(self):
-        self.model.save(self.model_path)
-
+        print("Do you wish to save this model? Yes/[Any]")
+        if (input(">> ") == 'Yes'):
+            print("Enter a savefile name")
+            self.model.save(self.modelPath + input(">> ") + ".h5")
     
     def setModel(self):
         print("Creating new model")
