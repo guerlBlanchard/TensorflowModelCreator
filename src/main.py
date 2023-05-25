@@ -46,6 +46,7 @@ class algorithm:
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+        print("Model has been created")
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
