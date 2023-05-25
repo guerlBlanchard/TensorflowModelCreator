@@ -8,8 +8,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 class algorithm:
+    # model definition
     model: tf.keras.Model 
     modelPath:str = "../saved_model/"
+
+    # model recommendations
+    inputLayerUnitsRecommendation: int = 0
+
     # columns: list[str]
 
     def __init__(self, savedModel:str=None):
@@ -90,13 +95,16 @@ class algorithm:
                 print("Encoding the {} column".format(column))
                 if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 50):
                     print("The column {} has too many varying values, please encode them manualy or augment the training data".format(column))
-                    exit
+                    continue
                 encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
                 dataSet[column] = dataSet[column].map(encoding_dict)
+                self.inputLayerUnitsRecommendation += len(dataSet[column])
             elif dataSet[column].dtype == "int64" or dataSet[column].dtype == "float64":
                 dataSet[column] = (dataSet[column] - dataSet[column].min()) / (dataSet[column].max() - dataSet[column].min())
+                self.inputLayerUnitsRecommendation += 1
             else:
                 print("Column {} if a {} type that has yet to be handled".format(column, dataSet[column].dtype))
+                self.inputLayerUnitsRecommendation += 10
         return dataSet
 
     def train(self, trainingSet):
