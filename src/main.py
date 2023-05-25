@@ -96,7 +96,7 @@ class algorithm:
             elif dataSet[column].dtype == "int64" or dataSet[column].dtype == "float64":
                 dataSet[column] = (dataSet[column] - dataSet[column].min()) / (dataSet[column].max() - dataSet[column].min())
             else:
-                print("Column {} if a {} type that has yet to be handled")
+                print("Column {} if a {} type that has yet to be handled".format(column, dataSet[column].dtype))
         return dataSet
 
     def train(self, trainingSet):
