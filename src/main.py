@@ -12,6 +12,7 @@ class algorithm:
     # model definition
     model: tf.keras.Model 
     modelPath:str = "../saved_model/"
+    modelTrainHistory: tf.keras.callbacks.History
 
     # model recommendations
     inputLayerUnitsRecommendation: int = 0
@@ -119,7 +120,7 @@ class algorithm:
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
-        self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
+        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
         print("Loss: {} || Accuracy: {}".format(loss, acc))
