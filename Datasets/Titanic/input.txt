@@ -1,0 +1,5 @@
+2
+4
+1
+Pclass;Sex;Age;SibSp;Parch;Embarked
+Survived

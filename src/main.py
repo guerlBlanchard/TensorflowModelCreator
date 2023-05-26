@@ -71,10 +71,10 @@ class algorithm:
         print("Creating new model")
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(10, activation="relu", input_shape=(6,)),
-            tf.keras.layers.Dense(1, activation="sigmoid")
+            tf.keras.layers.Dense(4, activation="relu", input_shape=(4,)),
+            tf.keras.layers.Dense(1, activation="linear")
         ])
-        self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+        self.model.compile(loss="mean_squared_error", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -88,6 +88,8 @@ class algorithm:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
         column = input(">> ")
+        if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
+            return pd.get_dummies(dataSet[column])
         return (dataSet[column])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -117,15 +119,17 @@ class algorithm:
         for column in dataSet.columns:
             if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
                 print("Encoding the {} column".format(column))
-                if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 50):
+                if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 10):
                     print("The column {} has too many varying values, please encode them manualy or augment the training data".format(column))
                     continue
-                encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
-                dataSet[column] = dataSet[column].map(encoding_dict)
+                dataSet[column] = pd.get_dummies(dataSet[column])
                 self.inputLayerUnitsRecommendation += len(dataSet[column].unique())
             elif dataSet[column].dtype == "int64" or dataSet[column].dtype == "float64":
-                dataSet[column] = (dataSet[column] - dataSet[column].min()) / (dataSet[column].max() - dataSet[column].min())
-                self.inputLayerUnitsRecommendation += 1
+                if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 10):
+                    dataSet[column] = (dataSet[column] - dataSet[column].min()) / (dataSet[column].max() - dataSet[column].min())
+                    self.inputLayerUnitsRecommendation += 1
+                else:
+                    self.inputLayerUnitsRecommendation += len(dataSet[column].unique())
             else:
                 print("Column {} if a {} type that has yet to be handled".format(column, dataSet[column].dtype))
                 self.inputLayerUnitsRecommendation += 10
@@ -142,7 +146,7 @@ class algorithm:
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
-        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
+        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
         print("Loss: {} || Accuracy: {}".format(loss, acc))
@@ -158,8 +162,8 @@ class algorithm:
 
 
 if __name__ == "__main__":
-    titanic = algorithm()
-    titanic.train("../Datasets/train.csv")
-    print(titanic)
+    iris = algorithm()
+    iris.train("../Datasets/Iris/Iris.csv")
+    print(iris)
     # titanic.predict("../Datasets/test.csv")
     # titanic.saveModel()
