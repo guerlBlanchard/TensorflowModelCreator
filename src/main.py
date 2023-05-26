@@ -6,6 +6,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 class algorithm:
     # model definition
@@ -43,7 +44,7 @@ class algorithm:
     def setModel(self):
         print("Creating new model")
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(64, activation="relu", input_shape=(6,)),
+            tf.keras.layers.Dense(32, activation="relu", input_shape=(6,)),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Dense(16, activation="relu"),
