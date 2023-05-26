@@ -30,28 +30,27 @@ class algorithm:
     def __str__(self) -> str:
         self.model.summary()
         self.plotHistory()
-        return ()
+        return ("")
 
     def plotHistory(self):
         plt.figure(figsize=(20, 6))
         plt.subplot(1, 3, 1)
-        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['accuracy'], label='Training Accuracy')
-        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['val_accuracy'], label='Validation Accuracy')
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['accuracy'], label='Training Accuracy')
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['val_accuracy'], label='Validation Accuracy')
         plt.xlabel('Epochs')
         plt.ylabel('Accuracy')
         plt.title('Epochs vs Accuracy')
         plt.legend()
         plt.grid(True)
         plt.subplot(1, 3, 2)
-        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['accuracy'], label='Training Accuracy')
-        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['val_accuracy'], label='Validation Accuracy')
-        plt.xlabel('Epochs')
-        plt.ylabel('Accuracy')
+        plt.plot(self.modelTrainHistory.history['accuracy'], self.modelTrainHistory.history['val_accuracy'], label='Training Accuracy')
+        plt.xlabel('acc')
+        plt.ylabel('val acc')
         plt.title('Validation vs Train Accuracy')
         plt.legend()
         plt.grid(True)
         plt.subplot(1, 3, 3)
-        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['loss'])
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['loss'])
         plt.xlabel('Epochs')
         plt.ylabel('Loss')
         plt.title('Loss')
@@ -75,10 +74,6 @@ class algorithm:
         print("Creating new model")
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(32, activation="relu", input_shape=(6,)),
-            tf.keras.layers.Dense(32, activation="relu"),
-            tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Dense(16, activation="relu"),
-            tf.keras.layers.Dropout(0.1),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -149,7 +144,7 @@ class algorithm:
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
-        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
+        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
         print("Loss: {} || Accuracy: {}".format(loss, acc))
@@ -167,5 +162,6 @@ class algorithm:
 if __name__ == "__main__":
     titanic = algorithm()
     titanic.train("../Datasets/train.csv")
+    print(titanic)
     titanic.predict("../Datasets/test.csv")
     titanic.saveModel()
