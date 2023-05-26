@@ -41,20 +41,17 @@ class algorithm:
         plt.ylabel('Accuracy')
         plt.title('Epochs vs Accuracy')
         plt.legend()
-        plt.grid(True)
         plt.subplot(1, 3, 2)
         plt.plot(self.modelTrainHistory.history['accuracy'], self.modelTrainHistory.history['val_accuracy'], label='Training Accuracy')
         plt.xlabel('acc')
         plt.ylabel('val acc')
         plt.title('Validation vs Train Accuracy')
         plt.legend()
-        plt.grid(True)
         plt.subplot(1, 3, 3)
         plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['loss'])
         plt.xlabel('Epochs')
         plt.ylabel('Loss')
         plt.title('Loss')
-        plt.grid(True)
         plt.tight_layout()
         plt.show()
 
@@ -72,8 +69,9 @@ class algorithm:
     
     def setModel(self):
         print("Creating new model")
+        print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(32, activation="relu", input_shape=(6,)),
+            tf.keras.layers.Dense(10, activation="relu", input_shape=(6,)),
             tf.keras.layers.Dense(1, activation="sigmoid")
         ])
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -124,7 +122,7 @@ class algorithm:
                     continue
                 encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
                 dataSet[column] = dataSet[column].map(encoding_dict)
-                self.inputLayerUnitsRecommendation += len(dataSet[column])
+                self.inputLayerUnitsRecommendation += len(dataSet[column].unique())
             elif dataSet[column].dtype == "int64" or dataSet[column].dtype == "float64":
                 dataSet[column] = (dataSet[column] - dataSet[column].min()) / (dataSet[column].max() - dataSet[column].min())
                 self.inputLayerUnitsRecommendation += 1
@@ -163,5 +161,5 @@ if __name__ == "__main__":
     titanic = algorithm()
     titanic.train("../Datasets/train.csv")
     print(titanic)
-    titanic.predict("../Datasets/test.csv")
-    titanic.saveModel()
+    # titanic.predict("../Datasets/test.csv")
+    # titanic.saveModel()
