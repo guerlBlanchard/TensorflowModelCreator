@@ -14,6 +14,10 @@ class algorithm:
     modelPath:str = "../saved_model/"
     modelTrainHistory: tf.keras.callbacks.History
 
+    # dataset
+    datasetInput: pd.DataFrame
+    datasetTarget: pd.DataFrame
+
     # model recommendations
     inputLayerUnitsRecommendation: int = 0
 
@@ -78,6 +82,12 @@ class algorithm:
         self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
+    def setDataset(self, datasetPath:str):
+        dataSet = self.handleMissing(pd.read_csv(datasetPath))
+        self.datasetInput = self.encode(self.selectInput(dataSet))
+        dataSet.drop(self.datasetInput.columns, axis=1)
+        self.datasetTarget = self.selectTarget(dataSet)
+
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
         print(dataSet.columns.values.tolist())
@@ -137,17 +147,13 @@ class algorithm:
                 self.inputLayerUnitsRecommendation += 10
         return dataSet
 
-    def train(self, trainingSet):
-        dataSet = self.handleMissing(pd.read_csv(trainingSet))
-        inputData = self.encode(self.selectInput(dataSet))
-        dataSet.drop(inputData.columns, axis=1)
-        targetData = self.selectTarget(dataSet)
-        print(inputData)
-        print(targetData)
+    def train(self):
+        print(self.datasetInput)
+        print(self.datasetTarget)
         input("Press ENTER to create your model")
         self.setModel()
         input("Press ENTER to train your model")
-        trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
+        trainX, validX, trainY, validY = train_test_split(self.datasetInput, self.datasetTarget, test_size=0.1, random_state=42)
         self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
