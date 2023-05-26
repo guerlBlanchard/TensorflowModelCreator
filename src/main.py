@@ -28,7 +28,36 @@ class algorithm:
             print("Previous model has been loaded")
 
     def __str__(self) -> str:
-        return (self.model.summary())
+        self.model.summary()
+        self.plotHistory()
+        return ()
+
+    def plotHistory(self):
+        plt.figure(figsize=(20, 6))
+        plt.subplot(1, 3, 1)
+        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['accuracy'], label='Training Accuracy')
+        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['val_accuracy'], label='Validation Accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.title('Epochs vs Accuracy')
+        plt.legend()
+        plt.grid(True)
+        plt.subplot(1, 3, 2)
+        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['accuracy'], label='Training Accuracy')
+        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['val_accuracy'], label='Validation Accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.title('Validation vs Train Accuracy')
+        plt.legend()
+        plt.grid(True)
+        plt.subplot(1, 3, 3)
+        plt.plot(self.modelTrainHistory['epoch'], self.modelTrainHistory['loss'])
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.title('Loss')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
 
     def saveModel(self):
         print("Do you wish to save this model? Yes/[Any]")
