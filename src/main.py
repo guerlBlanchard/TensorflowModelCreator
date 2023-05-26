@@ -75,9 +75,9 @@ class algorithm:
         print("Creating new model")
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(4, activation="relu", input_shape=(4,)),
-            tf.keras.layers.Dense(10, activation="relu", input_shape=(4,)),
-            tf.keras.layers.Dense(3, activation="softmax")
+            tf.keras.layers.Dense(10, activation="relu", input_shape=(self.datasetInput.shape[1], )),
+            tf.keras.layers.Dense(10, activation="relu"),
+            tf.keras.layers.Dense(self.datasetTarget.shape[1], activation="softmax")
         ])
         self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
@@ -171,7 +171,8 @@ class algorithm:
 
 if __name__ == "__main__":
     iris = algorithm()
-    iris.train("../Datasets/Iris/Iris.csv")
+    iris.setDataset("../Datasets/Iris/Iris.csv")
+    iris.train()
     print(iris)
     # titanic.predict("../Datasets/test.csv")
     # titanic.saveModel()
