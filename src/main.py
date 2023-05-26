@@ -72,9 +72,10 @@ class algorithm:
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(4, activation="relu", input_shape=(4,)),
-            tf.keras.layers.Dense(1, activation="linear")
+            tf.keras.layers.Dense(10, activation="relu", input_shape=(4,)),
+            tf.keras.layers.Dense(3, activation="softmax")
         ])
-        self.model.compile(loss="mean_squared_error", optimizer="adam", metrics=["accuracy"])
+        self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
@@ -122,7 +123,8 @@ class algorithm:
                 if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 10):
                     print("The column {} has too many varying values, please encode them manualy or augment the training data".format(column))
                     continue
-                dataSet[column] = pd.get_dummies(dataSet[column])
+                encoding_dict = {value: index for index, value in enumerate(dataSet[column].unique())}
+                dataSet[column] = dataSet[column].map(encoding_dict)
                 self.inputLayerUnitsRecommendation += len(dataSet[column].unique())
             elif dataSet[column].dtype == "int64" or dataSet[column].dtype == "float64":
                 if (len(dataSet[column].unique()) / len(dataSet[column]) * 100 >= 10):
@@ -146,7 +148,7 @@ class algorithm:
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(inputData, targetData, test_size=0.1, random_state=42)
-        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=1000, batch_size=32, validation_data=(validX, validY))
+        self.modelTrainHistory = self.model.fit(trainX, trainY, epochs=100, batch_size=32, validation_data=(validX, validY))
         print("Overall Evaluation:")
         loss, acc = self.model.evaluate(validX, validY)
         print("Loss: {} || Accuracy: {}".format(loss, acc))
