@@ -74,12 +74,13 @@ class algorithm:
     def setModel(self):
         print("Creating new model")
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
+        layerInput = input(">> ")
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(10, activation="relu", input_shape=(self.datasetInput.shape[1], )),
+            tf.keras.layers.Dense(int(layerInput), activation="relu", input_shape=(self.datasetInput.shape[1], )),
             tf.keras.layers.Dense(10, activation="relu"),
             tf.keras.layers.Dense(self.datasetTarget.shape[1], activation="softmax")
         ])
-        self.model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+        self.model.compile(loss="Binary_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
     def setDataset(self, datasetPath:str):
@@ -101,7 +102,7 @@ class algorithm:
         column = input(">> ")
         if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
             return pd.get_dummies(dataSet[column])
-        return (dataSet[column])
+        return (dataSet[[column]])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
@@ -171,7 +172,7 @@ class algorithm:
 
 if __name__ == "__main__":
     iris = algorithm()
-    iris.setDataset("../Datasets/Iris/Iris.csv")
+    iris.setDataset("../Datasets/Titanic/train.csv")
     iris.train()
     print(iris)
     # titanic.predict("../Datasets/test.csv")
