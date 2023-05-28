@@ -77,10 +77,11 @@ class algorithm:
         layerInput = input(">> ")
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(int(layerInput), activation="relu", input_shape=(self.datasetInput.shape[1], )),
-            tf.keras.layers.Dense(10, activation="relu"),
+            tf.keras.layers.Dense(64, activation="relu"),
+            tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(self.datasetTarget.shape[1], activation="softmax")
         ])
-        self.model.compile(loss="Binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+        self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
     def setDataset(self, datasetPath:str):
@@ -171,9 +172,11 @@ class algorithm:
 
 
 if __name__ == "__main__":
-    iris = algorithm()
-    iris.setDataset("../Datasets/Titanic/train.csv")
-    iris.train()
-    print(iris)
-    # titanic.predict("../Datasets/test.csv")
-    # titanic.saveModel()
+    # iris = algorithm()
+    # iris.setDataset("../Datasets/Iris/Iris.csv")
+    # iris.train()
+    # print(iris)
+    titanic = algorithm()
+    titanic.setDataset("../Datasets/Titanic/train.csv")
+    titanic.train()
+    print(titanic)
