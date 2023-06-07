@@ -1,5 +1,8 @@
 import os
-import readline
+try:
+    import readline
+except ImportError:
+    import pyreadline as readline
 
 import tensorflow as tf
 
@@ -20,8 +23,6 @@ class algorithm:
 
     # model recommendations
     inputLayerUnitsRecommendation: int = 0
-
-    # columns: list[str]
 
     def __init__(self, savedModel:str=None):
         if savedModel is None:
@@ -100,7 +101,7 @@ class algorithm:
     def setDataset(self, datasetPath:str):
         dataSet = self.handleMissing(pd.read_csv(datasetPath))
         self.datasetInput = self.encode(self.selectInput(dataSet))
-        dataSet.drop(self.datasetInput.columns, axis=1)
+        dataSet = dataSet.drop(self.datasetInput.columns, axis=1)
         self.datasetTarget = self.selectTarget(dataSet)
 
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
