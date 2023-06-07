@@ -59,7 +59,9 @@ class algorithm:
         plt.tight_layout()
         plt.show()
 
-    def inputCommand(self, Autocomplete : 'list[str]') -> str:
+    def inputCommand(self, Autocomplete : 'list[str]' = []) -> str:
+        if Autocomplete == []:
+            return (input(">> "))
         def completer(text, state):
             options = [cmd for cmd in Autocomplete if cmd.startswith(text)]
             if state < len(options):
@@ -68,10 +70,6 @@ class algorithm:
                 return None
         readline.parse_and_bind("tab: complete")
         readline.set_auto_history(completer)
-        return (input(">> "))
-    
-
-    def inputCommand(self) -> str:
         return (input(">> "))
 
     def saveModel(self):
@@ -108,14 +106,14 @@ class algorithm:
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
         print(dataSet.columns.values.tolist())
-        columns = self.inputCommand()
+        columns = self.inputCommand(dataSet.columns.values.tolist())
         self.columns = columns.split(';')
         return (dataSet[self.columns])
     
     def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
-        column = self.inputCommand()
+        column = self.inputCommand(dataSet.columns.values.tolist())
         if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
             return pd.get_dummies(dataSet[column])
         return (dataSet[[column]])
