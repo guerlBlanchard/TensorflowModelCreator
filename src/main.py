@@ -59,6 +59,21 @@ class algorithm:
         plt.tight_layout()
         plt.show()
 
+    def inputCommand(self, Autocomplete : 'list[str]') -> str:
+        def completer(text, state):
+            options = [cmd for cmd in Autocomplete if cmd.startswith(text)]
+            if state < len(options):
+                return options[state]
+            else:
+                return None
+        readline.parse_and_bind("tab: complete")
+        readline.set_auto_history(completer)
+        return (input(">> "))
+    
+
+    def inputCommand(self) -> str:
+        return (input(">> "))
+
     def saveModel(self):
         print("Do you wish to save this model? Yes/[Any]")
         if (input(">> ") == 'Yes'):
@@ -172,11 +187,11 @@ class algorithm:
 
 
 if __name__ == "__main__":
-    # iris = algorithm()
-    # iris.setDataset("../Datasets/Iris/Iris.csv")
-    # iris.train()
-    # print(iris)
-    titanic = algorithm()
-    titanic.setDataset("../Datasets/Titanic/train.csv")
-    titanic.train()
-    print(titanic)
+    iris = algorithm()
+    iris.setDataset("../Datasets/Iris/Iris.csv")
+    iris.train()
+    print(iris)
+    # titanic = algorithm()
+    # titanic.setDataset("../Datasets/Titanic/train.csv")
+    # titanic.train()
+    # print(titanic)
