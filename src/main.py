@@ -69,7 +69,7 @@ class algorithm:
             else:
                 return None
         readline.parse_and_bind("tab: complete")
-        readline.set_auto_history(completer)
+        readline.set_completer(completer)
         return (input(">> "))
 
     def saveModel(self):
