@@ -76,12 +76,12 @@ class algorithm:
 
     def saveModel(self):
         print("Do you wish to save this model? Yes/[Any]")
-        if (input(">> ") == 'Yes'):
+        if (self.inputCommand() == 'Yes'):
             print("Enter a savefile name")
-            savefile = input(">> ")
+            savefile = self.inputCommand()
             if os.path.exists(self.modelPath + savefile + ".h5"):
                 print("This savefile name is already taken. Do you wish to overide this savefile? Yes/[Any]")
-                if (input(">> ") == 'Yes'):
+                if (self.inputCommand() == 'Yes'):
                     self.model.save(self.modelPath + savefile + ".h5")
             else:
                 self.model.save(self.modelPath + savefile + ".h5")
@@ -89,7 +89,7 @@ class algorithm:
     def setModel(self):
         print("Creating new model")
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
-        layerInput = input(">> ")
+        layerInput = self.inputCommand()
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(int(layerInput), activation="relu", input_shape=(self.datasetInput.shape[1], )),
             tf.keras.layers.Dense(64, activation="relu"),
@@ -108,14 +108,14 @@ class algorithm:
     def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
         print(dataSet.columns.values.tolist())
-        columns = input(">> ")
+        columns = self.inputCommand()
         self.columns = columns.split(';')
         return (dataSet[self.columns])
     
     def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
-        column = input(">> ")
+        column = self.inputCommand()
         if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
             return pd.get_dummies(dataSet[column])
         return (dataSet[[column]])
@@ -128,7 +128,7 @@ class algorithm:
                 print("\t2 - Replace with the most frequent values")
                 print("\t3 - Replace with the most average values")
                 print("\t4 - Ignore")
-                option = input(">> ")
+                option = self.inputCommand()
                 if option == "1":
                     dataSet.dropna(subset=[column], inplace=True)
                 elif option == "2":
