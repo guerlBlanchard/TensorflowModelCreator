@@ -103,7 +103,7 @@ class algorithm:
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dense(self.datasetTarget.shape[1], activation="softmax")
         ])
-        self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+        self.model.compile(loss=self.lossFunction, optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
 
