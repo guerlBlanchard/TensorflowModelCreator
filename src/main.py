@@ -42,7 +42,10 @@ class algorithm:
         if (targetSet[0].dtypes == pd.StringDtype):
             self.lossFunction = "categorical_crossentropy"
         else:
-            self.lossFunction = "mse"
+            if (targetSet[0].isin([0, 1])):
+                self.lossFunction = "binary_crossentropy"
+            else:
+                self.lossFunction = "mse"
 
 
     def plotHistory(self):
