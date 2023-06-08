@@ -23,6 +23,7 @@ class algorithm:
 
     # model recommendations
     inputLayerUnitsRecommendation: int = 0
+    lossFunction: str
 
     def __init__(self, savedModel:str=None):
         if savedModel is None:
@@ -36,6 +37,13 @@ class algorithm:
         self.model.summary()
         self.plotHistory()
         return ("")
+    
+    def setLossFunction(self, targetSet: pd.DataFrame):
+        if (targetSet[0].dtypes == pd.StringDtype):
+            self.lossFunction = "categorical_crossentropy"
+        else:
+            self.lossFunction = "mse"
+
 
     def plotHistory(self):
         plt.figure(figsize=(20, 6))
@@ -98,26 +106,6 @@ class algorithm:
         self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
-    def setDataset(self, datasetPath:str):
-        dataSet = self.handleMissing(pd.read_csv(datasetPath))
-        self.datasetInput = self.encode(self.selectInput(dataSet))
-        dataSet = dataSet.drop(self.datasetInput.columns, axis=1)
-        self.datasetTarget = self.selectTarget(dataSet)
-
-    def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
-        print(dataSet.columns.values.tolist())
-        columns = self.inputCommand(dataSet.columns.values.tolist())
-        self.columns = columns.split(';')
-        return (dataSet[self.columns])
-    
-    def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
-        print("Please input the names of the column you wish to use as a Target value")
-        print(dataSet.columns.values.tolist())
-        column = self.inputCommand(dataSet.columns.values.tolist())
-        if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
-            return pd.get_dummies(dataSet[column])
-        return (dataSet[[column]])
 
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
@@ -127,7 +115,7 @@ class algorithm:
                 print("\t2 - Replace with the most frequent values")
                 print("\t3 - Replace with the most average values")
                 print("\t4 - Ignore")
-                option = self.inputCommand()
+                option = self.inputCommand(['1', '2', '3', '4'])
                 if option == "1":
                     dataSet.dropna(subset=[column], inplace=True)
                 elif option == "2":
