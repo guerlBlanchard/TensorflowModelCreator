@@ -49,7 +49,10 @@ class algorithm:
             elif (targetSet[0].between(0, 1).all()):
                 self.lossFunction = "kullback_leibler_divergence"
             else:
-                self.lossFunction = "mse"
+                if (targetSet[0].max() - targetSet[0].min()):
+                    self.lossFunction = "mse"
+                else:
+                    self.lossFunction = "huber"
 
 
     def plotHistory(self):
