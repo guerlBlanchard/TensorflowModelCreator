@@ -42,10 +42,11 @@ class algorithm:
         if (targetSet[0].dtypes == pd.StringDtype):
             self.lossFunction = "categorical_crossentropy"
         else:
-            if (targetSet[0].isin([0, 1]).all()):
-                self.lossFunction = "binary_crossentropy"
-            elif (targetSet[0].isin([-1, 1]).all()):
-                self.lossFunction = "hinge"
+            if (len(targetSet[0].unique()) == 2):
+                if (targetSet[0].isin([0, 1]).all()):
+                    self.lossFunction = "binary_crossentropy"
+                elif (targetSet[0].isin([-1, 1]).all()):
+                    self.lossFunction = "hinge"
             elif (targetSet[0].between(0, 1).all()):
                 self.lossFunction = "kullback_leibler_divergence"
             else:
