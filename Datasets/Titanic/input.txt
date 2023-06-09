@@ -3,3 +3,8 @@
 1
 Pclass;Sex;Age;SibSp;Parch;Embarked
 Survived
+
+
+binary_crossentropy
+
+SepalLengthCm;SepalWidthCm;PetalLengthCm;PetalWidthCm

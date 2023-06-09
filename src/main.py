@@ -44,6 +44,10 @@ class algorithm:
         else:
             if (targetSet[0].isin([0, 1])):
                 self.lossFunction = "binary_crossentropy"
+            elif (targetSet[0].isin([-1, 1])):
+                self.lossFunction = "hinge"
+            elif (targetSet[0].between(0, 1).all()):
+                self.lossFunction = "kullback_leibler_divergence"
             else:
                 self.lossFunction = "mse"
 
