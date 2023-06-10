@@ -49,6 +49,8 @@ class algorithm:
                     self.lossFunction = "hinge"
             elif (targetSet[0].between(0, 1).all()):
                 self.lossFunction = "kullback_leibler_divergence"
+            elif (len(targetSet[0].unique()) / len(targetSet[0]) < 10):
+                self.lossFunction = "sparse_categorical_crossentropy"
             else:
                 if (targetSet[0].max() - targetSet[0].min()):
                     self.lossFunction = "mse"
