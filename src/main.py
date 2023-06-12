@@ -8,8 +8,9 @@ import tensorflow as tf
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+from scipy.stats import normaltest
+from sklearn.model_selection import train_test_split
 
 class algorithm:
     # model definition
@@ -52,10 +53,11 @@ class algorithm:
             elif (len(targetSet[0].unique()) / len(targetSet[0]) < 10):
                 self.lossFunction = "sparse_categorical_crossentropy"
             else:
-                if (targetSet[0].max() - targetSet[0].min()):
-                    self.lossFunction = "mse"
-                else:
+                p_value, _ = normaltest(targetSet[0])
+                if (p_value <  0.055):
                     self.lossFunction = "huber"
+                else:
+                    self.lossFunction = "mse"
 
 
     def plotHistory(self):
