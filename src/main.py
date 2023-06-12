@@ -26,6 +26,8 @@ class algorithm:
     inputLayerUnitsRecommendation: int = 0
     lossFunction: str
 
+
+    # Default Methods
     def __init__(self, savedModel:str=None):
         if savedModel is None:
             return
@@ -39,6 +41,7 @@ class algorithm:
         self.plotHistory()
         return ("")
     
+    # Settings methods
     def setLossFunction(self, targetSet: pd.DataFrame):
         if (targetSet[0].dtypes == pd.StringDtype):
             self.lossFunction = "categorical_crossentropy"
@@ -53,35 +56,12 @@ class algorithm:
             elif (len(targetSet[0].unique()) / len(targetSet[0]) < 10):
                 self.lossFunction = "sparse_categorical_crossentropy"
             else:
-                p_value, _ = normaltest(targetSet[0])
+                _, p_value = normaltest(targetSet[0])
                 if (p_value <  0.055):
                     self.lossFunction = "huber"
                 else:
                     self.lossFunction = "mse"
-
-
-    def plotHistory(self):
-        plt.figure(figsize=(20, 6))
-        plt.subplot(1, 3, 1)
-        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['accuracy'], label='Training Accuracy')
-        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['val_accuracy'], label='Validation Accuracy')
-        plt.xlabel('Epochs')
-        plt.ylabel('Accuracy')
-        plt.title('Epochs vs Accuracy')
-        plt.legend()
-        plt.subplot(1, 3, 2)
-        plt.plot(self.modelTrainHistory.history['accuracy'], self.modelTrainHistory.history['val_accuracy'], label='Training Accuracy')
-        plt.xlabel('acc')
-        plt.ylabel('val acc')
-        plt.title('Validation vs Train Accuracy')
-        plt.legend()
-        plt.subplot(1, 3, 3)
-        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['loss'])
-        plt.xlabel('Epochs')
-        plt.ylabel('Loss')
-        plt.title('Loss')
-        plt.tight_layout()
-        plt.show()
+        return (self.lossFunction)
 
     def inputCommand(self, Autocomplete : 'list[str]' = []) -> str:
         if Autocomplete == []:
@@ -95,18 +75,6 @@ class algorithm:
         readline.parse_and_bind("tab: complete")
         readline.set_completer(completer)
         return (input(">> "))
-
-    def saveModel(self):
-        print("Do you wish to save this model? Yes/[Any]")
-        if (self.inputCommand() == 'Yes'):
-            print("Enter a savefile name")
-            savefile = self.inputCommand()
-            if os.path.exists(self.modelPath + savefile + ".h5"):
-                print("This savefile name is already taken. Do you wish to overide this savefile? Yes/[Any]")
-                if (self.inputCommand() == 'Yes'):
-                    self.model.save(self.modelPath + savefile + ".h5")
-            else:
-                self.model.save(self.modelPath + savefile + ".h5")
     
     def setModel(self):
         print("Creating new model")
@@ -121,7 +89,7 @@ class algorithm:
         self.model.compile(loss=self.lossFunction, optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
 
-
+    # DataSet manipulation
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
         for column in dataSet.columns:
             if dataSet[column].isna().sum() != 0:
@@ -165,7 +133,32 @@ class algorithm:
                 print("Column {} if a {} type that has yet to be handled".format(column, dataSet[column].dtype))
                 self.inputLayerUnitsRecommendation += 10
         return dataSet
+    
+    # Data visualisation
+    def plotHistory(self):
+        plt.figure(figsize=(20, 6))
+        plt.subplot(1, 3, 1)
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['accuracy'], label='Training Accuracy')
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['val_accuracy'], label='Validation Accuracy')
+        plt.xlabel('Epochs')
+        plt.ylabel('Accuracy')
+        plt.title('Epochs vs Accuracy')
+        plt.legend()
+        plt.subplot(1, 3, 2)
+        plt.plot(self.modelTrainHistory.history['accuracy'], self.modelTrainHistory.history['val_accuracy'], label='Training Accuracy')
+        plt.xlabel('acc')
+        plt.ylabel('val acc')
+        plt.title('Validation vs Train Accuracy')
+        plt.legend()
+        plt.subplot(1, 3, 3)
+        plt.plot(self.modelTrainHistory.epoch, self.modelTrainHistory.history['loss'])
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.title('Loss')
+        plt.tight_layout()
+        plt.show()
 
+    # Model Manipulation
     def train(self):
         print(self.datasetInput)
         print(self.datasetTarget)
@@ -186,6 +179,19 @@ class algorithm:
             inputData = self.encode(self.handleMissing(self.selectInput(dataSet[self.columns])))
         predictions = self.model.predict(inputData)
         print(f"Estimated test probability: {np.sum(predictions) / len(predictions):.4f}")
+
+    def saveModel(self):
+        print("Do you wish to save this model? Yes/[Any]")
+        if (self.inputCommand() == 'Yes'):
+            print("Enter a savefile name")
+            savefile = self.inputCommand()
+            if os.path.exists(self.modelPath + savefile + ".h5"):
+                print("This savefile name is already taken. Do you wish to overide this savefile? Yes/[Any]")
+                if (self.inputCommand() == 'Yes'):
+                    self.model.save(self.modelPath + savefile + ".h5")
+            else:
+                self.model.save(self.modelPath + savefile + ".h5")
+
 
 
 if __name__ == "__main__":
