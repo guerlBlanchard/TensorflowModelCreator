@@ -1,4 +1,5 @@
 import os
+from typing import Any
 try:
     import readline
 except ImportError:
@@ -40,7 +41,7 @@ class algorithm:
         self.model.summary()
         self.plotHistory()
         return ("")
-    
+
     # Settings methods
     def setLossFunction(self, targetSet: pd.DataFrame):
         if (targetSet[0].dtypes == pd.StringDtype):
@@ -75,6 +76,27 @@ class algorithm:
         readline.parse_and_bind("tab: complete")
         readline.set_completer(completer)
         return (input(">> "))
+    
+    def setDataset(self, datasetPath:str):
+        dataSet = self.handleMissing(pd.read_csv(datasetPath))
+        self.datasetInput = self.encode(self.selectInput(dataSet))
+        dataSet = dataSet.drop(self.datasetInput.columns, axis=1)
+        self.datasetTarget = self.selectTarget(dataSet)
+
+    def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
+        print(dataSet.columns.values.tolist())
+        columns = self.inputCommand(dataSet.columns.values.tolist())
+        self.columns = columns.split(';')
+        return (dataSet[self.columns])
+    
+    def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        print("Please input the names of the column you wish to use as a Target value")
+        print(dataSet.columns.values.tolist())
+        column = self.inputCommand(dataSet.columns.values.tolist())
+        if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
+            return pd.get_dummies(dataSet[column])
+        return (dataSet[[column]])
     
     def setModel(self):
         print("Creating new model")
@@ -163,6 +185,7 @@ class algorithm:
         print(self.datasetInput)
         print(self.datasetTarget)
         input("Press ENTER to create your model")
+        self.setLossFunction(self.datasetTarget)
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(self.datasetInput, self.datasetTarget, test_size=0.1, random_state=42)
