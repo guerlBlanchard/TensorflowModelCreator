@@ -43,21 +43,21 @@ class algorithm:
         return ("")
 
     # Settings methods
-    def setLossFunction(self, targetSet: pd.DataFrame):
-        if (targetSet[0].dtypes == pd.StringDtype):
+    def setLossFunction(self, targetSet: pd.Series) -> str:
+        if (targetSet.dtypes == object):
             self.lossFunction = "categorical_crossentropy"
         else:
-            if (len(targetSet[0].unique()) == 2):
-                if (targetSet[0].isin([0, 1]).all()):
+            if (len(targetSet.unique()) == 2):
+                if (targetSet.isin([0, 1]).all()):
                     self.lossFunction = "binary_crossentropy"
-                elif (targetSet[0].isin([-1, 1]).all()):
+                elif (targetSet.isin([-1, 1]).all()):
                     self.lossFunction = "hinge"
-            elif (targetSet[0].between(0, 1).all()):
+            elif (targetSet.between(0, 1).all()):
                 self.lossFunction = "kullback_leibler_divergence"
-            elif (len(targetSet[0].unique()) / len(targetSet[0]) < 10):
+            elif (len(targetSet.unique()) / len(targetSet) < 10):
                 self.lossFunction = "sparse_categorical_crossentropy"
             else:
-                _, p_value = normaltest(targetSet[0])
+                _, p_value = normaltest(targetSet)
                 if (p_value <  0.055):
                     self.lossFunction = "huber"
                 else:
@@ -94,8 +94,8 @@ class algorithm:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
         column = self.inputCommand(dataSet.columns.values.tolist())
-        if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
-            return pd.get_dummies(dataSet[column])
+        # if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
+        #     return pd.get_dummies(dataSet[column])
         return (dataSet[[column]])
     
     def setModel(self):
@@ -185,7 +185,7 @@ class algorithm:
         print(self.datasetInput)
         print(self.datasetTarget)
         input("Press ENTER to create your model")
-        self.setLossFunction(self.datasetTarget)
+        self.setLossFunction(self.datasetTarget.iloc[:,0])
         self.setModel()
         input("Press ENTER to train your model")
         trainX, validX, trainY, validY = train_test_split(self.datasetInput, self.datasetTarget, test_size=0.1, random_state=42)
