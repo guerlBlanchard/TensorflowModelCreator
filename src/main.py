@@ -46,6 +46,7 @@ class algorithm:
     def setLossFunction(self, targetSet: pd.Series) -> str:
         if (targetSet.dtypes == object):
             self.lossFunction = "categorical_crossentropy"
+            self.datasetTarget = pd.get_dummies(targetSet)
         else:
             if (len(targetSet.unique()) == 2):
                 if (targetSet.isin([0, 1]).all()):
@@ -94,8 +95,6 @@ class algorithm:
         print("Please input the names of the column you wish to use as a Target value")
         print(dataSet.columns.values.tolist())
         column = self.inputCommand(dataSet.columns.values.tolist())
-        # if dataSet[column].dtype != "int64" and dataSet[column].dtype != "float64":
-        #     return pd.get_dummies(dataSet[column])
         return (dataSet[[column]])
     
     def setModel(self):
