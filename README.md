@@ -22,3 +22,11 @@ If my understanding of ML is deep enough after these steps, the following will b
 - Model layering recommendation usin ML
 
 - Automatic dataset preprocessing
+
+Future project related to the one will concern:
+
+ - A web interface
+
+ - An application interface
+
+ - An API
