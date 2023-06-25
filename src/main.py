@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Tuple
 try:
     import readline
 except ImportError:
@@ -97,6 +97,8 @@ class algorithm:
         column = self.inputCommand(dataSet.columns.values.tolist())
         return (dataSet[[column]])
     
+
+    # Model Creation
     def setModel(self):
         print("Creating new model")
         print("Please input the amount of units you wish you input layer has (Recommended: {})".format(self.inputLayerUnitsRecommendation))
@@ -109,6 +111,9 @@ class algorithm:
         ])
         self.model.compile(loss=self.lossFunction, optimizer="adam", metrics=["accuracy"])
         print("Model has been created")
+
+    def defineModel(self, modelSettings: 'list[Tuple[str, str, int]]') -> tf.keras.Model:
+        return
 
     # DataSet manipulation
     def handleMissing(self, dataSet: pd.DataFrame) -> pd.DataFrame:
