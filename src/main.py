@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import normaltest
 from sklearn.model_selection import train_test_split
 
+from color import Color
+
 class algorithm:
     # model definition
     model: tf.keras.Model 
