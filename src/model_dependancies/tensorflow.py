@@ -14,10 +14,20 @@ from scipy.stats import normaltest
 from sklearn.model_selection import train_test_split
 
 
-class algorithm:
-    # model definition
-    dependencyType: str = ""
-    savedPath:str = "../saved_model/"
+class tensorflow:
+        # model definition
+    model: tf.keras.Model 
+    modelPath:str = "../saved_model/"
+    modelTrainHistory: tf.keras.callbacks.History
+
+    # dataset
+    datasetInput: pd.DataFrame
+    datasetTarget: pd.DataFrame
+
+    # model recommendations
+    inputLayerUnitsRecommendation: int = 0
+    lossFunction: str
+
 
     # Default Methods
     def __init__(self, savedModel:str=None):
@@ -209,15 +219,3 @@ class algorithm:
                     self.model.save(self.modelPath + savefile + ".h5")
             else:
                 self.model.save(self.modelPath + savefile + ".h5")
-
-
-
-if __name__ == "__main__":
-    iris = algorithm()
-    iris.setDataset("../Datasets/Iris/Iris.csv")
-    iris.train()
-    print(iris)
-    # titanic = algorithm()
-    # titanic.setDataset("../Datasets/Titanic/train.csv")
-    # titanic.train()
-    # print(titanic)
