@@ -20,13 +20,8 @@ class algorithm:
     savedPath:str = "../saved_model/"
 
     # Default Methods
-    def __init__(self, savedModel:str=None):
-        if savedModel is None:
-            return
-        self.modelPath += savedModel
-        if (os.path.exists(self.modelPath)):
-            self.model = tf.keras.models.load_model(self.modelPath)
-            print("Previous model has been loaded")
+    def __init__(self, choosenDependency:str):
+        
 
     def __str__(self) -> str:
         self.model.summary()
