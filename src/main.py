@@ -20,8 +20,8 @@ class algorithm:
     savedPath:str = "../saved_model/"
 
     # Default Methods
-    def __init__(self, choosenDependency:str):
-        
+    def __init__(self,):
+        pass
 
     def __str__(self) -> str:
         self.model.summary()

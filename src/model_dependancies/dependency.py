@@ -30,6 +30,26 @@ class DependencyModel:
         return (input(">> "))
 
 
+    # default dataset Methods
+    def setDataset(self, datasetPath:str):
+        dataSet = self.handleMissing(pd.read_csv(datasetPath))
+        self.datasetInput = self.encode(self.selectInput(dataSet))
+        dataSet = dataSet.drop(self.datasetInput.columns, axis=1)
+        self.datasetTarget = self.selectTarget(dataSet)
+
+    def selectInput(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        print("Please input the names of the columns you wish to use as an input separated by a semicolon ( ; )")
+        print(dataSet.columns.values.tolist())
+        columns = self.inputCommand(dataSet.columns.values.tolist())
+        self.columns = columns.split(';')
+        return (dataSet[self.columns])
+    
+    def selectTarget(self, dataSet: pd.DataFrame) -> pd.DataFrame:
+        print("Please input the names of the column you wish to use as a Target value")
+        print(dataSet.columns.values.tolist())
+        column = self.inputCommand(dataSet.columns.values.tolist())
+        return (dataSet[[column]])
+
     #model methods
     def build_model(self):
         pass
